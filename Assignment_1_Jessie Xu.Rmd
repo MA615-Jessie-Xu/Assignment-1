@@ -1,0 +1,82 @@
+---
+title: "Assignment_1_Jessie Xu"
+author: "Jessie Xu"
+date: "2021/9/22"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library(tidyverse)
+```
+(1)After install the package once, we need to use library() to invoke the relative functions everytime we start our R.
+
+(2)Using packman::p_load() can replace install.packages("A","B") and library(A,B) at the same time.
+
+```{r}
+# call built-in data mtcars.
+data(mtcars)
+
+# Select only car models where mpg<20
+mtcars_mpg2 <- mtcars[mtcars$mpg < 20,]
+
+# Reduce the variables to mpg, cyl, disp, hp, gears
+mtcars_mpg2 <- mtcars_mpg2[, c(1,2,3,4,10)]  
+```
+Pay attention to the expression of the questions, there are so many time that I read the question in reverse, like "reduce..to.." actually means reserve the things after "to". 
+
+```{r}
+# read the R file hand_functions.R so that it can be used
+# notice that with echo = TRUE 
+source(file = "hand_functions.R", echo = TRUE)  
+
+# Now use the function from hand_functions.R
+sp_out <- sum_special(mtcars_mpg2)
+sp_out 
+```
+(1)“echo=TRUE” means that all setted code chunks will be included in the final rendered version.
+
+(2)Using the new "sum_special()" function, we can get the value of the mean, the var, the cov and the cor of our target variables.
+
+```{r}
+ggplot(mtcars_mpg2) +
+  aes(x = disp, y = mpg) +
+  geom_point(shape = "bullet", size = 4L, colour = "#B22222") +
+  geom_smooth(span = 0.5) +
+  theme_minimal()
+```
+
+(1)"#B22222" is a great dark red shade.
+
+(2)"span" controls the amount of smoothing for the default loess smoother. The larger the span the smoother the plot.
+
+(3)The shade aroung the line means the confidence bands of the data.
+
+(4)theme_minimal() means no context like no black grid lines and no dark gray color of the background.
+
+```{r}
+# draw a boxplot by using geom_boxplot()
+ggplot(mtcars_mpg2, aes(x=as.factor(cyl), y=mpg)) + 
+  geom_boxplot(fill="slateblue", alpha=0.2) + 
+  xlab("cyl")
+```
+
+```{r}
+# install.packages("esquisse")
+# library(esquisse)
+# esquisser(data = mtcars_mpg2, viewer = "browser")
+
+# note that this boxplot cannot be made with esquisse() unless
+# the data is adjusted.  What adjustment is needed?
+```
+
+By running the code of line 58-60, I noticed that the presence or absence of "as.factor()" function can affect the graph we plot. So I try to generate a new colunm which add cyl as a classification variable.
+
+```{r}
+mtcars_mpg2$factor_cyl <- as.factor(mtcars_mpg2$cyl)
+# esquisser(data = mtcars_mpg2, viewer = "browser")
+```
+Just drag "factor_cyl" into the X box and drag "mpg" in to y box, we can plot this boxplot made with esquisse() successfully. 
+
+
